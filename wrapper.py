@@ -22,32 +22,75 @@ from ctypes import cdll, c_double, c_int, POINTER, c_char_p
 
 import numpy as np
 
-import config
-
 c_double_p = POINTER(c_double)
 EVAL_LIMIT = 100000
 ITERATION = [0] * 30
 results_file_name = "test.txt"
 best_results = [sys.float_info.max] * 30
-# f_xs = [[]] * 30
-f_vals = [[] for _ in range(30)]
-f_best_val = [[] for _ in range(30)]
 
 
-def plot_results():
-    import matplotlib.pyplot as plt
+class O:
+    def __init__(self):
+        self.f_vals = [[] for _ in range(30)]
+        self.f_best_val = [[] for _ in range(30)]
 
-    for i, (vals, b_vals) in enumerate(zip(f_vals, f_best_val)):
-        if len(vals) == 0:
-            continue
-        # print(vals)
-        plt.clf()
-        plt.plot(vals, color='b')
-        plt.plot(b_vals, color='r')
-        filename = config.filename_prefix + str(i) + '.png'
-        plt.savefig(filename)
-        plt.close()
-        print("plot " + filename + ' saved')
+    def get_results(self):
+        from copy import copy
+        return copy(self.f_vals), copy(self.f_best_val)
+
+    def clear_results(self):
+        self.f_vals = [[] for _ in range(30)]
+        self.f_best_val = [[] for _ in range(30)]
+
+    def cec2017(self, i, x):
+        if EVAL_LIMIT - ITERATION[i] <= 0:
+            return None
+        ITERATION[i] = ITERATION[i] + 1
+        assert isinstance(i, int)
+        if i < 1 or i > 30:
+            exit("Invalid argument: 'i' should be an integer between 1 and 30 !")
+
+        try:
+            sh = x.shape
+        except AttributeError:
+            exit("x must be a numpy array")
+        if len(sh) == 1:
+            row = 1
+            col = sh[0]
+        else:
+            row = sh[0]
+            col = sh[1]
+
+        if col not in [2, 10, 20, 30, 50, 100]:
+            exit("Invalid argument: Only 2, 10, 20, 30, 50 and 100 dimensions/variables are allowed !")
+
+        path = os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                            "libcec2017C.so"))
+        libc = cdll.LoadLibrary(path)
+        cec2017 = libc.cec2017
+        cec2017.argtypes = [c_char_p, c_int, c_double_p, c_int, c_int, c_double_p]
+
+        x = x.astype(float, order='C')
+
+        f = np.zeros(row)
+        f = f.astype(float, order='C')
+
+        cec2017(
+            root_path("data", "cec2017").encode(),
+            i,
+            x.ctypes.data_as(c_double_p),
+            row,
+            col,
+            f.ctypes.data_as(c_double_p))
+
+        if best_results[i] > f:
+            best_results[i] = f
+
+        self.f_vals[i].append(f[0])
+
+        self.f_best_val[i].append(best_results[i][0])
+
+        return f
 
 
 def save_results():
@@ -85,59 +128,6 @@ def root_path(*args):
     return path
 
 
-def cec2017(i, x):
-    if EVAL_LIMIT - ITERATION[i] <= 0:
-        # print("Max number of iteration reached")
-        return None
-    ITERATION[i] = ITERATION[i] + 1
-    assert isinstance(i, int)
-    if i < 1 or i > 30:
-        exit("Invalid argument: 'i' should be an integer between 1 and 30 !")
-
-    try:
-        sh = x.shape
-    except AttributeError:
-        exit("x must be a numpy array")
-    if len(sh) == 1:
-        row = 1
-        col = sh[0]
-    else:
-        row = sh[0]
-        col = sh[1]
-
-    if col not in [2, 10, 20, 30, 50, 100]:
-        exit("Invalid argument: Only 2, 10, 20, 30, 50 and 100 dimensions/variables are allowed !")
-
-    path = os.path.abspath(os.path.join(os.path.dirname(__file__),
-                                        "libcec2017C.so"))
-    libc = cdll.LoadLibrary(path)
-    cec2017 = libc.cec2017
-    cec2017.argtypes = [c_char_p, c_int, c_double_p, c_int, c_int, c_double_p]
-
-    x = x.astype(float, order='C')
-
-    f = np.zeros(row)
-    f = f.astype(float, order='C')
-
-    cec2017(
-        root_path("data", "cec2017").encode(),
-        i,
-        x.ctypes.data_as(c_double_p),
-        row,
-        col,
-        f.ctypes.data_as(c_double_p))
-
-    # print(f)
-    if best_results[i] > f:
-        best_results[i] = f
-    # f_xs[i].append(x)
-
-    f_vals[i].append(f[0])
-
-    f_best_val[i].append(best_results[i][0])
-
-    return f
-
-
 if __name__ == "__main__":
-    print(cec2017(1, np.zeros(50)))
+    o = O()
+    print(o.cec2017(1, np.zeros(50)))
