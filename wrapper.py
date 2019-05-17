@@ -15,17 +15,39 @@
 #    Its length MUST be in [2, 10, 20, 30, 50, 100]                            #
 ################################################################################
 
-from ctypes import cdll, c_double, c_int, POINTER, c_char_p
-import numpy as np
 # from src.utils import root_path
 import os
 import sys
+from ctypes import cdll, c_double, c_int, POINTER, c_char_p
+
+import numpy as np
+
+import config
 
 c_double_p = POINTER(c_double)
 EVAL_LIMIT = 100000
-ITERATION = [0]*30
+ITERATION = [0] * 30
 results_file_name = "test.txt"
-best_results = [sys.float_info.max]*30
+best_results = [sys.float_info.max] * 30
+# f_xs = [[]] * 30
+f_vals = [[] for _ in range(30)]
+f_best_val = [[] for _ in range(30)]
+
+
+def plot_results():
+    import matplotlib.pyplot as plt
+
+    for i, (vals, b_vals) in enumerate(zip(f_vals, f_best_val)):
+        if len(vals) == 0:
+            continue
+        # print(vals)
+        plt.clf()
+        plt.plot(vals, color='b')
+        plt.plot(b_vals, color='r')
+        filename = config.filename_prefix + str(i) + '.png'
+        plt.savefig(filename)
+        plt.close()
+        print("plot " + filename + ' saved')
 
 
 def save_results():
@@ -34,11 +56,12 @@ def save_results():
             f.write("%s\n" % item)
     print("File saved")
 
+
 def init(name="test"):
     global ITERATION
-    ITERATION = [0]*30
+    ITERATION = [0] * 30
     global results_file_name
-    results_file_name = name +'.txt'
+    results_file_name = name + '.txt'
 
 
 def root_path(*args):
@@ -64,7 +87,7 @@ def root_path(*args):
 
 def cec2017(i, x):
     if EVAL_LIMIT - ITERATION[i] <= 0:
-        #print("Max number of iteration reached")
+        # print("Max number of iteration reached")
         return None
     ITERATION[i] = ITERATION[i] + 1
     assert isinstance(i, int)
@@ -105,8 +128,14 @@ def cec2017(i, x):
         f.ctypes.data_as(c_double_p))
 
     # print(f)
-    if best_results[i]>f:
-        best_results[i]=f
+    if best_results[i] > f:
+        best_results[i] = f
+    # f_xs[i].append(x)
+
+    f_vals[i].append(f[0])
+
+    f_best_val[i].append(best_results[i][0])
+
     return f
 
 
