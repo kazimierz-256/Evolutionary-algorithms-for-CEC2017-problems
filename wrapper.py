@@ -22,7 +22,7 @@ import os
 import sys
 
 c_double_p = POINTER(c_double)
-EVAL_LIMIT = 10
+EVAL_LIMIT = 100000
 ITERATION = [0]*30
 results_file_name = "test.txt"
 best_results = [sys.float_info.max]*30
@@ -63,9 +63,9 @@ def root_path(*args):
 
 
 def cec2017(i, x):
-#     if EVAL_LIMIT - ITERATION[i] <= 0:
+    if EVAL_LIMIT - ITERATION[i] <= 0:
         #print("Max number of iteration reached")
-#         return None
+        return None
     ITERATION[i] = ITERATION[i] + 1
     assert isinstance(i, int)
     if i < 1 or i > 30:

@@ -10,7 +10,7 @@ http://web.mysites.ntu.edu.sg/epnsugan/PublicSite/Shared%20Documents/CEC-2017/Bo
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <malloc.h>
+#include <malloc/malloc.h>
 #include <string.h>
 
 void cec17_test_func(double *, double *,int,int,int);
