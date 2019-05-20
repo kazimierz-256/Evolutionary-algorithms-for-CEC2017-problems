@@ -1,6 +1,7 @@
 DIFF = 'diff'
 RAND = 'rand'
 LIPOLD = 'lipold'
+COMPACTOR = 'compactor'
 
 algo = LIPOLD
 

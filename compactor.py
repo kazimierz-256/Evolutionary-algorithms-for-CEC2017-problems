@@ -5,15 +5,15 @@ import numpy as np
 from itertools import chain
 
 class Compactor:
-    def __init__(self, dim, cec2017, fn_number, survival_rate, probes_per_iteration):
+    def __init__(self, cec2017, fn_number, dim, limit = 100_000, survival_rate, probes_per_iteration, safety_closeness_to_past = 0.2):
         self.dim = dim
         self.cec2017 = cec2017
         self.fn_number = fn_number
         self.survival_rate = survival_rate
-        self.safety_closeness_to_past = .2
+        self.safety_closeness_to_past = safety_closeness_to_past
         self.box_boundaries = 100
         self.probes_per_iteration = probes_per_iteration
-        self.limit = 100_000
+        self.limit = limit
         self.initial_probe_count = probes_per_iteration/(1-survival_rate))
         
     def optimize_min(self):

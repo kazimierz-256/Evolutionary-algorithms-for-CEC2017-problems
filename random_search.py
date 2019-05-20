@@ -47,6 +47,18 @@ def main():
             v, bv = o.get_results()
             o.clear_results()
             util.plot_results(rand_v, rand_bv, v, bv, config.filename_prefix + str(i) + '.png')
+        elif config.algo == config.COMPACTOR:
+            from compactor import Compactor
+            single_evaluation(i, dim, limit, cec2017)
+            rand_v, rand_bv = o.get_results()
+            o.clear_results()
+
+            cpctr = Compactor(cec2017, fn_number=i, dim=dim, limit=limit, survival_rate=.95, probes_per_iteration=20, safety_closeness_to_past = 0.2)
+            cpctr.optimize_min()
+
+            v, bv = o.get_results()
+            o.clear_results()
+            util.plot_results(rand_v, rand_bv, v, bv, config.filename_prefix + str(i) + '.png')
 
     print('time elapsed:', time.time() - tt)
     save_results()
