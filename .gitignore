@@ -4,5 +4,4 @@ __pycache__/
 *.o
 out/
 *.pyc
-libcec2017.so
-libcec2017C.so
+*.so
