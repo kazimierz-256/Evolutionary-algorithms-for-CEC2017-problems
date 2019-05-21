@@ -15,7 +15,7 @@ def main():
     import time
     np.random.seed(1)
 
-    limit = 1000
+    limit = 100000
     initial_sample_count = 40
     init(config.filename_prefix + str(limit))
 
@@ -49,14 +49,14 @@ def main():
             util.plot_results(rand_v, rand_bv, v, bv, config.filename_prefix + str(i) + '.png')
         elif config.algo == config.COMPACTOR:
             from compactor import Compactor
-            single_evaluation(i, dim, limit, cec2017)
+            single_evaluation(i, dim, limit, o.cec2017)
             rand_v, rand_bv = o.get_results()
             o.clear_results()
 
             survival_rate = .95
             probes_per_iteration = 20
-            write('Expected accuracy (euclidean dista) is about', survival_rate ** (limit / (probes_per_iteration * dim)))
-            cpctr = Compactor(cec2017, fn_number=i, dim=dim, limit=limit, survival_rate=survival_rate, probes_per_iteration=probes_per_iteration, safety_closeness_to_past = 0.5)
+            print('Expected accuracy (euclidean dista) is about', survival_rate ** (limit / (probes_per_iteration * dim)))
+            cpctr = Compactor(o.cec2017, fn_number=i, dim=dim, limit=limit, survival_rate=survival_rate, probes_per_iteration=probes_per_iteration, safety_closeness_to_past = 0.5)
             cpctr.optimize_min()
 
             v, bv = o.get_results()

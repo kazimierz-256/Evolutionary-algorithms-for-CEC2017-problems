@@ -24,7 +24,6 @@ import numpy as np
 
 c_double_p = POINTER(c_double)
 EVAL_LIMIT = 100000
-ITERATION = [0] * 30
 results_file_name = "test.txt"
 best_results = [sys.float_info.max] * 30
 
@@ -33,6 +32,7 @@ class O:
     def __init__(self):
         self.f_vals = [[] for _ in range(30)]
         self.f_best_val = [[] for _ in range(30)]
+        self.ITERATION = [0] * 30
 
     def get_results(self):
         from copy import copy
@@ -41,11 +41,12 @@ class O:
     def clear_results(self):
         self.f_vals = [[] for _ in range(30)]
         self.f_best_val = [[] for _ in range(30)]
+        self.ITERATION = [0] * 30
 
     def cec2017(self, i, x):
-        if EVAL_LIMIT - ITERATION[i] <= 0:
+        if EVAL_LIMIT - self.ITERATION[i] <= 0:
             return None
-        ITERATION[i] = ITERATION[i] + 1
+        self.ITERATION[i] = self.ITERATION[i] + 1
         assert isinstance(i, int)
         if i < 1 or i > 30:
             exit("Invalid argument: 'i' should be an integer between 1 and 30 !")
