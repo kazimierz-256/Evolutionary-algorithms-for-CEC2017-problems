@@ -4,8 +4,8 @@ LIPOLD = 'lipold'
 COMPACTOR = 'compactor'
 SUBSPYCE = 'subspyce'
 
-algo = DIFF
-limit = 100
+algo = SUBSPYCE
+limit = 100000
 
 filename_prefix = 'out/' + algo + '_' + str(limit) + '_'
 

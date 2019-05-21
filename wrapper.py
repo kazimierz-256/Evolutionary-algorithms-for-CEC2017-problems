@@ -35,7 +35,7 @@ class O:
         self.results_file_name = results_file_name
 
     def save_results(self):
-        with open(self.results_file_name, 'w') as f:
+        with open(self.results_file_name + '.txt', 'w') as f:
             for item in self.best_results:
                 f.write("%s\n" % item)
         print("File saved")
@@ -43,11 +43,6 @@ class O:
     def get_results(self):
         from copy import copy
         return copy(self.f_vals), copy(self.f_best_val)
-
-    def clear_results(self):
-        self.f_vals = [[] for _ in range(30)]
-        self.f_best_val = [[] for _ in range(30)]
-        self.ITERATION = [0] * 30
 
     def cec2017(self, i, x):
         if self.EVAL_LIMIT - self.ITERATION[i] <= 0:

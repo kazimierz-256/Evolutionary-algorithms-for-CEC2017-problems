@@ -43,9 +43,8 @@ def main():
             from differential_evolution import DifferentialEvolution
 
             mu = 10
-            de = DifferentialEvolution(10, limit=limit, mu=mu, cec2017=o.cec2017, fn_id=i)
-            run_and_compare_to_random(i, se, random_o, de, o)
-
+            de = DifferentialEvolution(dim=10, limit=limit, mu=mu, cec2017=o.cec2017, fn_id=i)
+            run_and_compare_to_random(fn_id=i, se=se, random_o=random_o, ff=de, f_o=o)
         elif config.algo == config.RAND:
             se = SingleEvaluation(dim=dim, limit=limit, cec2017=random_o.cec2017, fn_id=i)
             se.optimize_min()
@@ -54,11 +53,12 @@ def main():
 
             from lipold import LipoLD
 
-            lild = LipoLD(o.cec2017, fn_number=i, dim=dim, limit=limit, initial_sample_count=initial_sample_count,
+            lild = LipoLD(cec2017=o.cec2017, fn_number=i, dim=dim, limit=limit,
+                          initial_sample_count=initial_sample_count,
                           population_size=1000,
                           population_size_global=0, break_when_found_good_estimate=False)
 
-            run_and_compare_to_random(i, se, random_o, lild, o)
+            run_and_compare_to_random(fn_id=i, se=se, random_o=random_o, ff=lild, f_o=o)
         elif config.algo == config.COMPACTOR:
             se = SingleEvaluation(dim=dim, limit=limit, cec2017=random_o.cec2017, fn_id=i)
 
@@ -69,18 +69,19 @@ def main():
                   survival_rate ** (limit / (probes_per_iteration * dim)))
             cpctr = Compactor(o.cec2017, fn_number=i, dim=dim, limit=limit, survival_rate=survival_rate,
                               probes_per_iteration=probes_per_iteration, safety_closeness_to_past=0.5)
-            # cpctr.optimize_min()
-            run_and_compare_to_random(i, se, random_o, cpctr, o)
+
+            run_and_compare_to_random(fn_id=i, se=se, random_o=random_o, ff=cpctr, f_o=o)
         elif config.algo == config.SUBSPYCE:
             se = SingleEvaluation(dim=dim, limit=limit, cec2017=random_o.cec2017, fn_id=i)
 
             from subsp import Subspyce
             probes_per_dimension = lambda dimension: dimension
-            initial_probe_count = limit / 10
-            sbspc = Subspyce(o.cec2017, fn_number=i, dim=dim, limit=limit, \
-                probes_per_dimension=probes_per_dimension, min_dim=10, max_dim=10, initial_probe_count=initial_probe_count)
-            
-            run_and_compare_to_random(i, se, random_o, cpctr, o)
+            initial_probe_count = int(limit / 10)
+            sbspc = Subspyce(cec2017=o.cec2017, fn_number=i, dim=dim, limit=limit,
+                             probes_per_dimension=probes_per_dimension,
+                             min_dim=10, max_dim=10, initial_probe_count=initial_probe_count)
+
+            run_and_compare_to_random(fn_id=i, se=se, random_o=random_o, ff=sbspc, f_o=o)
 
     print('time elapsed:', time.time() - tt)
     o.save_results()

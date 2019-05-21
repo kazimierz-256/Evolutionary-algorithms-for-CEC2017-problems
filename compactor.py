@@ -77,7 +77,7 @@ class Compactor:
                         and np.greater_equal(new_right_boundaries, point_fval[0]).all():
                     survived.append(point_fval)
 
-            return (survived, new_left_boundaries, new_right_boundaries)
+            return survived, new_left_boundaries, new_right_boundaries
 
         while available_samples > 0:
             new_point_count = min(available_samples, self.probes_per_iteration)
