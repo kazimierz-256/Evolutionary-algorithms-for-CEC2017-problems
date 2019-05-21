@@ -53,7 +53,10 @@ def main():
             rand_v, rand_bv = o.get_results()
             o.clear_results()
 
-            cpctr = Compactor(cec2017, fn_number=i, dim=dim, limit=limit, survival_rate=.95, probes_per_iteration=20, safety_closeness_to_past = 0.2)
+            survival_rate = .95
+            probes_per_iteration = 20
+            write('Expected accuracy (euclidean dista) is about', survival_rate ** (limit / (probes_per_iteration * dim)))
+            cpctr = Compactor(cec2017, fn_number=i, dim=dim, limit=limit, survival_rate=survival_rate, probes_per_iteration=probes_per_iteration, safety_closeness_to_past = 0.5)
             cpctr.optimize_min()
 
             v, bv = o.get_results()

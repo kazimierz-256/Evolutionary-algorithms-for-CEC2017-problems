@@ -14,7 +14,7 @@ class Compactor:
         self.box_boundaries = 100
         self.probes_per_iteration = probes_per_iteration
         self.limit = limit
-        self.initial_probe_count = probes_per_iteration/(1-survival_rate))
+        self.initial_probe_count = probes_per_iteration/(1-survival_rate)
         
     def optimize_min(self):
         left_boundaries = np.ones(dim) * -self.box_boundaries
@@ -43,27 +43,29 @@ class Compactor:
 
         def establish_new_boundaries(descending_pairs, previous_left, previous_right):
             # establish new boundaries
+            single_dimensional_survival_rate = self.survival_rate ** (1/dim)
             new_left_boundaries = np.copy(descending_pairs[0][0])
             new_right_boundaries = np.copy(descending_pairs[0][0])
 
             survival_ratio = 0.0
             def safe_boundaries_left(left):
-                previous_left * self.safety_closeness_to_past + left * (1.0-self.safety_closeness_to_past)
+                diff = previous_right - previous_left
+                return np.min(previous_left + single_dimensional_survival_rate * diff, previous_left * self.safety_closeness_to_past + left * (1.0-self.safety_closeness_to_past))
             def safe_boundaries_right(right):
-                previous_right * self.safety_closeness_to_past + right * (1.0-self.safety_closeness_to_past)
+                diff = previous_right - previous_left
+                return np.max(previous_right - single_dimensional_survival_rate * diff, previous_right * self.safety_closeness_to_past + right * (1.0-self.safety_closeness_to_past))
 
             def boundary_survival_ratio(left, right):
-                # could be the product of those
+                # could be the product of those, some norm of some sort
                 return numpy.divide(left - right, previous_left - previous_right).min()
 
             survived = list()
             survived.push(descending_pairs[0])
             last_surviving_index = 0
             survival_ratio = 0
-
             # expand survival ratio
             for index, point_fval in enumerate(descending_pairs[1:]):
-                if survival_ratio > self.survival_rate:
+                if survival_ratio > single_dimensional_survival_rate:
                     break
                 # expand
                 new_right_boundaries = np.maximum(new_right_boundaries, point_fval[0])
@@ -74,9 +76,9 @@ class Compactor:
 
             # pack in the remaining valid vertices
             # TODO start from index is it ok?
-            for point_fval in descending_pairs[(last_surviving_index+1):]
-                if np.less_equal(point_fval[0], new_left_boundaries).all() 
-                    and np.greater_equal(new_right_boundaries, point_fval[0]).all()
+            for point_fval in descending_pairs[(last_surviving_index + 1):]:
+                if np.less_equal(point_fval[0], new_left_boundaries).all() \
+                    and np.greater_equal(new_right_boundaries, point_fval[0]).all():
                     survived.push(point_fval)
             
             return (survived, new_left_boundaries, new_right_boundaries)

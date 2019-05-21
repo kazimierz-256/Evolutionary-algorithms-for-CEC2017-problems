@@ -3,6 +3,6 @@ RAND = 'rand'
 LIPOLD = 'lipold'
 COMPACTOR = 'compactor'
 
-algo = LIPOLD
+algo = COMPACTOR
 
 filename_prefix = 'out/' + algo + '_'
