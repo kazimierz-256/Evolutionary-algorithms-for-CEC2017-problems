@@ -23,16 +23,22 @@ from ctypes import cdll, c_double, c_int, POINTER, c_char_p
 import numpy as np
 
 c_double_p = POINTER(c_double)
-EVAL_LIMIT = 100000
-results_file_name = "test.txt"
-best_results = [sys.float_info.max] * 30
 
 
 class O:
-    def __init__(self):
+    def __init__(self, results_file_name):
         self.f_vals = [[] for _ in range(30)]
         self.f_best_val = [[] for _ in range(30)]
+        self.EVAL_LIMIT = 100000
         self.ITERATION = [0] * 30
+        self.best_results = [sys.float_info.max] * 30
+        self.results_file_name = results_file_name
+
+    def save_results(self):
+        with open(self.results_file_name, 'w') as f:
+            for item in self.best_results:
+                f.write("%s\n" % item)
+        print("File saved")
 
     def get_results(self):
         from copy import copy
@@ -44,7 +50,7 @@ class O:
         self.ITERATION = [0] * 30
 
     def cec2017(self, i, x):
-        if EVAL_LIMIT - self.ITERATION[i] <= 0:
+        if self.EVAL_LIMIT - self.ITERATION[i] <= 0:
             return None
         self.ITERATION[i] = self.ITERATION[i] + 1
         assert isinstance(i, int)
@@ -84,28 +90,15 @@ class O:
             col,
             f.ctypes.data_as(c_double_p))
 
-        if best_results[i] > f:
-            best_results[i] = f
+        if self.best_results[i] > f:
+            self.best_results[i] = f
+            print("Hooray", self.best_results[i])
 
         self.f_vals[i].append(f[0])
 
-        self.f_best_val[i].append(best_results[i][0])
+        self.f_best_val[i].append(self.best_results[i][0])
 
         return f
-
-
-def save_results():
-    with open(results_file_name, 'w') as f:
-        for item in best_results:
-            f.write("%s\n" % item)
-    print("File saved")
-
-
-def init(name="test"):
-    global ITERATION
-    ITERATION = [0] * 30
-    global results_file_name
-    results_file_name = name + '.txt'
 
 
 def root_path(*args):
@@ -130,5 +123,5 @@ def root_path(*args):
 
 
 if __name__ == "__main__":
-    o = O()
+    o = O("test.txt")
     print(o.cec2017(1, np.zeros(50)))

@@ -32,19 +32,20 @@ def get_random_point_100(dim):
     return np.random.rand(dim) * 200 - 100
 
 
-def plot_results(f_vals_rand, f_best_val_rand, f_vals, f_best_val, filename):
+def plot_results(fn_id, f_vals_rand, f_best_val_rand, f_vals, f_best_val, filename):
     import matplotlib.pyplot as plt
-    for i, (vals_rand, b_vals_rand, vals, b_vals) in enumerate(zip(f_vals_rand, f_best_val_rand, f_vals, f_best_val)):
-        if len(vals_rand) == 0:
-            continue
-        plt.clf()
-        fig = plt.figure()
-        plt.axis([0, len(vals_rand), 0, (b_vals[-1] + b_vals_rand[-1]) * 2])
-        ax = fig.add_subplot(1, 1, 1)
-        ax.plot(vals, color='b', label='f')
-        ax.plot(b_vals, color='r', label='best_val')
-        ax.plot(b_vals_rand, color='g', label='rand_best_val')
-        fig.savefig(filename)
-        plt.legend()
-        plt.close()
-        print("plot " + filename + ' saved')
+    vals_rand, b_vals_rand, vals, b_vals = f_vals_rand[fn_id], f_best_val_rand[fn_id], f_vals[fn_id], f_best_val[fn_id]
+
+    if len(vals_rand) == 0:
+        return
+    plt.clf()
+    fig = plt.figure()
+    plt.axis([0, len(vals_rand), 0, (b_vals[-1] + b_vals_rand[-1]) * 2])
+    ax = fig.add_subplot(1, 1, 1)
+    ax.plot(vals, color='b', label='f')
+    ax.plot(b_vals, color='r', label='best_val')
+    ax.plot(b_vals_rand, color='g', label='rand_best_val')
+    fig.savefig(filename)
+    plt.legend()
+    plt.close()
+    print("plot " + filename + ' saved')
