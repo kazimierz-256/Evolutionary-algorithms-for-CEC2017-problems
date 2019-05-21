@@ -75,11 +75,17 @@ def main():
             se = SingleEvaluation(dim=dim, limit=limit, cec2017=random_o.cec2017, fn_id=i)
 
             from subsp import Subspyce
-            probes_per_dimension = lambda dimension: dimension
             initial_probe_count = int(limit / 10)
+            # probability_table = [0 for _ in range(dim)]
+            # probability_table[0:3] = [4.0, 2.0, 1.0]
+            # probability_table = [(x+1)**(-3) for x in range(dim)]
+            probability_table = [4**(-x) for x in range(dim)]
+            sum_prob = sum(probability_table)
+            probability_table = [x/sum_prob for x in probability_table]
+            print(probability_table)
             sbspc = Subspyce(cec2017=o.cec2017, fn_number=i, dim=dim, limit=limit,
-                             probes_per_dimension=probes_per_dimension,
-                             min_dim=10, max_dim=10, initial_probe_count=initial_probe_count)
+                             probability_table=probability_table, initial_probe_count=initial_probe_count)
+
 
             run_and_compare_to_random(fn_id=i, se=se, random_o=random_o, ff=sbspc, f_o=o)
 

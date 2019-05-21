@@ -87,7 +87,8 @@ class O:
 
         if self.best_results[i] > f:
             self.best_results[i] = f
-            print("Hooray", self.best_results[i])
+            # print('New best [iteration: {0}] {1}'.format(self.ITERATION[i], self.best_results[i]))
+            # save_results(self)
 
         self.f_vals[i].append(f[0])
 
