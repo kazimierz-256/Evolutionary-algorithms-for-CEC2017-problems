@@ -39,7 +39,7 @@ class Subspyce:
             available_samples -= sample_count
             dimensions = np.random.choice(self.dim, size=subspace_dim, replace=False)
             for _ in range(sample_count):
-                v = np.random.uniform(size=subspace_dim)
+                v = np.random.uniform(size=subspace_dim)*200-100
                 back_point = np.copy(best[0])
                 for index, sub_dim in enumerate(dimensions):
                     back_point[sub_dim] = v[index]
