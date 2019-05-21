@@ -71,6 +71,15 @@ def main():
                               probes_per_iteration=probes_per_iteration, safety_closeness_to_past=0.5)
             cpctr.optimize_min()
             run_and_compare_to_random(i, se, random_o, cpctr, o)
+        elif config.algo == config.SUBSPYCE:
+            se = SingleEvaluation(dim=dim, limit=limit, cec2017=random_o.cec2017, fn_id=i)
+
+            from subsp import Subspyce
+            probes_per_dimension = lambda dimension: 10 * dimension
+            initial_sample_count = 1000
+            cpctr = Compactor(o.cec2017, fn_number=i, dim=dim, limit=limit, probes_per_dimension=probes_per_dimension, min_dim = 3, max_dim=7, initial_sample_count=initial_sample_count)
+            cpctr.optimize_min()
+            run_and_compare_to_random(i, se, random_o, cpctr, o)
 
     print('time elapsed:', time.time() - tt)
     o.save_results()
