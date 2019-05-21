@@ -77,8 +77,9 @@ def main():
             from subsp import Subspyce
             probes_per_dimension = lambda dimension: dimension
             initial_probe_count = limit / 10
-            cpctr = Compactor(o.cec2017, fn_number=i, dim=dim, limit=limit, probes_per_dimension=probes_per_dimension, min_dim = 3, max_dim=7, initial_probe_count=initial_probe_count)
-            # cpctr.optimize_min()
+            sbspc = Subspyce(o.cec2017, fn_number=i, dim=dim, limit=limit, \
+                probes_per_dimension=probes_per_dimension, min_dim=10, max_dim=10, initial_probe_count=initial_probe_count)
+            
             run_and_compare_to_random(i, se, random_o, cpctr, o)
 
     print('time elapsed:', time.time() - tt)
