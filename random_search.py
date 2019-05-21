@@ -9,13 +9,13 @@ from single_evaluation import SingleEvaluation
 def run_and_compare_to_random(fn_id, se, random_o, ff, f_o):
     se.optimize_min()
     rand_v, rand_bv = random_o.get_results()
-    print('random best:', (rand_bv[fn_id][-1]))
-    print('random best error:', rand_bv[fn_id][-1] / (fn_id * 100))
+    print('random best {0:E}'.format(rand_bv[fn_id][-1]))
+    print('random best error {0:E}'.format(rand_bv[fn_id][-1] / (fn_id * 100)))
 
     ff.optimize_min()
     v, bv = f_o.get_results()
-    print('f best:', (bv[fn_id][-1]))
-    print('f best error:', bv[fn_id][-1] / (fn_id * 100))
+    print('f best {0:E}'.format(bv[fn_id][-1]))
+    print('f best error {0:E}'.format(bv[fn_id][-1] / (fn_id * 100)))
     util.plot_results(fn_id, rand_v, rand_bv, v, bv,
                       config.filename_prefix + str(fn_id) + '.png')
 
@@ -69,16 +69,16 @@ def main():
                   survival_rate ** (limit / (probes_per_iteration * dim)))
             cpctr = Compactor(o.cec2017, fn_number=i, dim=dim, limit=limit, survival_rate=survival_rate,
                               probes_per_iteration=probes_per_iteration, safety_closeness_to_past=0.5)
-            cpctr.optimize_min()
+            # cpctr.optimize_min()
             run_and_compare_to_random(i, se, random_o, cpctr, o)
         elif config.algo == config.SUBSPYCE:
             se = SingleEvaluation(dim=dim, limit=limit, cec2017=random_o.cec2017, fn_id=i)
 
             from subsp import Subspyce
-            probes_per_dimension = lambda dimension: 10 * dimension
-            initial_sample_count = 1000
-            cpctr = Compactor(o.cec2017, fn_number=i, dim=dim, limit=limit, probes_per_dimension=probes_per_dimension, min_dim = 3, max_dim=7, initial_sample_count=initial_sample_count)
-            cpctr.optimize_min()
+            probes_per_dimension = lambda dimension: dimension
+            initial_probe_count = limit / 10
+            cpctr = Compactor(o.cec2017, fn_number=i, dim=dim, limit=limit, probes_per_dimension=probes_per_dimension, min_dim = 3, max_dim=7, initial_probe_count=initial_probe_count)
+            # cpctr.optimize_min()
             run_and_compare_to_random(i, se, random_o, cpctr, o)
 
     print('time elapsed:', time.time() - tt)
