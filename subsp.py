@@ -29,7 +29,7 @@ class Subspyce:
                 best_point = pair[0]
 
         dimension = np.random.choice(self.dim, size=available_samples)
-        points = np.random.uniform(size=available_samples) * 200 - 100
+        points = np.random.uniform(low=-100.0, high=100.0, size=available_samples)
 
         while available_samples > 0:
             available_samples -= 1
