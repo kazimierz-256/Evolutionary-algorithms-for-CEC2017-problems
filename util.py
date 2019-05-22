@@ -40,7 +40,7 @@ def plot_results(fn_id, f_vals_rand, f_best_val_rand, f_vals, f_best_val, filena
         return
     plt.clf()
     fig = plt.figure()
-    plt.axis([0, len(vals_rand), 0, (b_vals[-1] + b_vals_rand[-1]) * 2])
+    plt.axis([0, len(vals_rand), 0, (b_vals[-1]) * 4])
     ax = fig.add_subplot(1, 1, 1)
     ax.plot(vals, color='b', label='f')
     ax.plot(b_vals, color='r', label='best_val')

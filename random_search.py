@@ -7,22 +7,26 @@ import util
 def run_and_compare_to_random(fn_id, se, random_o, ff, f_o):
     se.optimize_min()
     rand_v, rand_bv = random_o.get_results()
+    # print('random best:', (rand_bv[fn_id][-1]))
+    # print('random best error:', rand_bv[fn_id][-1] / (fn_id * 100))
     print('random best {0:E}'.format(rand_bv[fn_id][-1]))
     print('random best error {0:E}'.format(rand_bv[fn_id][-1] / (fn_id * 100)))
 
     ff.optimize_min()
     v, bv = f_o.get_results()
+    # print('f best:', (bv[fn_id][-1]))
+    # print('f best error:', bv[fn_id][-1] / (fn_id * 100))
     print('f best {0:E}'.format(bv[fn_id][-1]))
     print('f best error {0:E}'.format(bv[fn_id][-1] / (fn_id * 100)))
     util.plot_results(fn_id, rand_v, rand_bv, v, bv,
-                      config.filename_prefix + str(fn_id) + '.png')
+                      config.filename_prefix + str(fn_id) + '.svg')
 
 
 def main():
     import time
     from single_evaluation import SingleEvaluation
     from wrapper import O
-    np.random.seed(1)
+    np.random.seed(2)
 
     limit = config.limit
     dim = config.dim
@@ -75,15 +79,7 @@ def main():
 
             from subsp import Subspyce
             initial_probe_count = int(limit / 10)
-            # probability_table = [0 for _ in range(dim)]
-            # probability_table[0:3] = [4.0, 2.0, 1.0]
-            # probability_table = [(x+1)**(-3) for x in range(dim)]
-            probability_table = [4 ** (-x) for x in range(dim)]
-            sum_prob = sum(probability_table)
-            probability_table = [x / sum_prob for x in probability_table]
-            print(probability_table)
-            sbspc = Subspyce(cec2017=o.cec2017, fn_number=i, dim=dim, limit=limit,
-                             probability_table=probability_table, initial_probe_count=initial_probe_count)
+            sbspc = Subspyce(cec2017=o.cec2017, fn_number=i, dim=dim, limit=limit, initial_probe_count=initial_probe_count)
 
             run_and_compare_to_random(fn_id=i, se=se, random_o=random_o, ff=sbspc, f_o=o)
 
