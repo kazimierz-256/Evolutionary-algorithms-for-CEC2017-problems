@@ -21,32 +21,25 @@ class Subspyce:
         sample_fval_pairs = [(v, self.cec2017(self.fn_number, v)[0]) for v in samples]
 
         # choose the best one
-        best = sample_fval_pairs[0]
+        best_point = sample_fval_pairs[0][0]
+        best_val = sample_fval_pairs[0][1]
         for pair in sample_fval_pairs[1:]:
-            if pair[1] < best[1]:
-                best = pair
+            if pair[1] < best_val:
+                best_val = pair[1]
+                best_point = pair[0]
+
+        dimension = np.random.choice(self.dim, size=available_samples)
+        points = np.random.uniform(size=available_samples) * 200 - 100
 
         while available_samples > 0:
-            # TODO: maybe probe count should depend on
             available_samples -= 1
-            dimensions = np.random.choice(self.dim, size=1, replace=False)
-            v = np.random.uniform(size=1) * 200 - 100
-            back_point = np.copy(best[0])
-            for index, sub_dim in enumerate(dimensions):
-                back_point[sub_dim] = v[index]
-            fv = self.cec2017(self.fn_number, back_point)[0]
-            if fv < best[1]:
-                best = (back_point, fv)
-
-
-        # while available_samples > 0:
-        #     # TODO: maybe probe count should depend on
-        #     available_samples -= 1
-        #     dimensions = np.random.choice(self.dim, size=1, replace=False)
-        #     v = np.random.uniform(size=1) * 200 - 100
-        #     back_point = np.copy(best[0])
-        #     for index, sub_dim in enumerate(dimensions):
-        #         back_point[sub_dim] = v[index]
-        #     fv = self.cec2017(self.fn_number, back_point)[0]
-        #     if fv < best[1]:
-        #         best = (back_point, fv)
+            chosen_dimension = dimension[available_samples]
+            archive = best_point[chosen_dimension]
+            best_point[chosen_dimension] = points[available_samples]
+            fv = self.cec2017(self.fn_number, best_point)[0]
+            if fv < best_val:
+                best_val = fv
+                # point is already modified
+            else:
+                best_point[chosen_dimension] = archive
+                # value should be left untouched

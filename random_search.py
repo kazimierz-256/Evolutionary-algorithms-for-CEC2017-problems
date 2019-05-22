@@ -5,12 +5,12 @@ import util
 
 
 def run_and_compare_to_random(fn_id, se, random_o, ff, f_o):
-    se.optimize_min()
-    rand_v, rand_bv = random_o.get_results()
-    # print('random best:', (rand_bv[fn_id][-1]))
-    # print('random best error:', rand_bv[fn_id][-1] / (fn_id * 100))
-    print('random best {0:E}'.format(rand_bv[fn_id][-1]))
-    print('random best error {0:E}'.format(rand_bv[fn_id][-1] / (fn_id * 100)))
+    # se.optimize_min()
+    # rand_v, rand_bv = random_o.get_results()
+    # # print('random best:', (rand_bv[fn_id][-1]))
+    # # print('random best error:', rand_bv[fn_id][-1] / (fn_id * 100))
+    # print('random best {0:E}'.format(rand_bv[fn_id][-1]))
+    # print('random best error {0:E}'.format(rand_bv[fn_id][-1] / (fn_id * 100)))
 
     ff.optimize_min()
     v, bv = f_o.get_results()
