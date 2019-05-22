@@ -2,8 +2,6 @@ import numpy as np
 
 import config
 import util
-import wrapper
-from single_evaluation import SingleEvaluation
 
 
 def run_and_compare_to_random(fn_id, se, random_o, ff, f_o):
@@ -22,17 +20,17 @@ def run_and_compare_to_random(fn_id, se, random_o, ff, f_o):
 
 def main():
     import time
+    from single_evaluation import SingleEvaluation
+    from wrapper import O
     np.random.seed(1)
 
     limit = config.limit
-    initial_sample_count = 40
+    dim = config.dim
 
     tt = time.time()
 
-    dim = 10
-    random_o = wrapper.O(config.get_filename_prefix(algo_name='random'))
-
-    o = wrapper.O(config.get_filename_prefix())
+    random_o = O(config.get_filename_prefix(algo_name='random'))
+    o = O(config.get_filename_prefix())
 
     for i in range(1, 11):
         print('Function', i)
@@ -53,6 +51,7 @@ def main():
 
             from lipold import LipoLD
 
+            initial_sample_count = 40
             lild = LipoLD(cec2017=o.cec2017, fn_number=i, dim=dim, limit=limit,
                           initial_sample_count=initial_sample_count,
                           population_size=1000,
@@ -79,13 +78,12 @@ def main():
             # probability_table = [0 for _ in range(dim)]
             # probability_table[0:3] = [4.0, 2.0, 1.0]
             # probability_table = [(x+1)**(-3) for x in range(dim)]
-            probability_table = [4**(-x) for x in range(dim)]
+            probability_table = [4 ** (-x) for x in range(dim)]
             sum_prob = sum(probability_table)
-            probability_table = [x/sum_prob for x in probability_table]
+            probability_table = [x / sum_prob for x in probability_table]
             print(probability_table)
             sbspc = Subspyce(cec2017=o.cec2017, fn_number=i, dim=dim, limit=limit,
                              probability_table=probability_table, initial_probe_count=initial_probe_count)
-
 
             run_and_compare_to_random(fn_id=i, se=se, random_o=random_o, ff=sbspc, f_o=o)
 

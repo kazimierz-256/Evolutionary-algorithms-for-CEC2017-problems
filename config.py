@@ -6,6 +6,7 @@ SUBSPYCE = 'subspyce'
 
 algo = SUBSPYCE
 limit = 100000
+dim = 10
 
 filename_prefix = 'out/' + algo + '_' + str(limit) + '_'
 
