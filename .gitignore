@@ -2,6 +2,6 @@
 .vscode/
 __pycache__/
 *.o
-out/
+*out/
 *.pyc
 *.so
