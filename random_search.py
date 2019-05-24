@@ -78,7 +78,8 @@ def main():
             se = SingleEvaluation(dim=dim, limit=limit, cec2017=random_o.cec2017, fn_id=i)
 
             from subsp import Subspyce
-            initial_probe_count = int(limit / 5)
+
+            initial_probe_count = dim * 100
             sbspc = Subspyce(cec2017=o.cec2017, fn_number=i, dim=dim, limit=limit,
                              initial_probe_count=initial_probe_count)
 
