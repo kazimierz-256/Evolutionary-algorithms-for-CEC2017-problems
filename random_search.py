@@ -3,7 +3,7 @@ import numpy as np
 import config
 import util
 
-results_filename = 'out/results.txt'
+results_filename = 'out/results_dist.txt'
 
 
 def run_and_compare(fn_id, se, random_o, ff, f_o):
@@ -13,14 +13,17 @@ def run_and_compare(fn_id, se, random_o, ff, f_o):
     # print('f best {0:E}'.format(bv[fn_id][-1]))
     # print('f best error {0:E}'.format(bv[fn_id][-1] / (fn_id * 100)))
 
-    se.optimize_min()
-    rand_v, rand_bv = random_o.get_results()
-    print('no_opt best ', rand_bv[fn_id][-1])
-    # print('random best {0:E}'.format(rand_bv[fn_id][-1]))
-    # print('random best error {0:E}'.format(rand_bv[fn_id][-1] / (fn_id * 100)))
+    # se.optimize_min()
+    # rand_v, rand_bv = random_o.get_results()
+    # print('no_opt best ', rand_bv[fn_id][-1])
+    # # print('random best {0:E}'.format(rand_bv[fn_id][-1]))
+    # # print('random best error {0:E}'.format(rand_bv[fn_id][-1] / (fn_id * 100)))
+
+    # with open(results_filename, 'a') as f:
+    #     f.write(str(fn_id) + "\t" + str(bv[fn_id][-1]) + "\t" + str(rand_bv[fn_id][-1]) + "\n")
 
     with open(results_filename, 'a') as f:
-        f.write(str(fn_id) + "\t" + str(bv[fn_id][-1]) + "\t" + str(rand_bv[fn_id][-1]) + "\n")
+        f.write(str(bv[fn_id][-1]) + "\n")
 
     # util.plot_results_to_compare(fn_id, rand_v, rand_bv, v, bv,
     #                              config.filename_prefix + str(fn_id) + '.svg')

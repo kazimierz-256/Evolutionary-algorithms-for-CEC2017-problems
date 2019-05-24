@@ -45,6 +45,7 @@ class Subspyce:
         dimension = np.random.choice(self.dim, size=available_samples)
         high, low = 100., -100.
         points = np.random.uniform(low=low, high=high, size=available_samples)
+        distances = [[] for _ in range(self.dim)]
 
         iter_since_last_update = [0 for _ in range(self.dim)]
 
@@ -58,6 +59,7 @@ class Subspyce:
             if fv < best_val:
                 # point is already modified
                 best_val = fv
+                distances[chosen_dimension].append(abs(archive - best_point[chosen_dimension]))
                 iter_since_last_update[chosen_dimension] = 0
             else:
                 # value should be left untouched
@@ -99,12 +101,15 @@ class Subspyce:
                 # point is already modified
                 best_val = fv
                 iter_since_last_update[chosen_dimension] = 0
+                distances[chosen_dimension].append(abs(archive - best_point[chosen_dimension]))
                 high_lows = widen_high_lows(high_lows, chosen_dimension, coef, best_point[chosen_dimension])
             else:
                 # value should be left untouched
                 best_point[chosen_dimension] = archive
                 iter_since_last_update[chosen_dimension] += 1
 
-            if iter_since_last_update[chosen_dimension] >= 1000:
-                high_lows = shrink_high_lows(high_lows, chosen_dimension, coef, best_point[chosen_dimension])
+            if iter_since_last_update[chosen_dimension] > 1000:
+                high_lows = widen_high_lows(high_lows, chosen_dimension, coef, best_point[chosen_dimension])
                 iter_since_last_update[chosen_dimension] = 0
+            elif sum(distances[chosen_dimension][-100:]) < 150:
+                high_lows = shrink_high_lows(high_lows, chosen_dimension, coef, best_point[chosen_dimension])
