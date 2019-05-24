@@ -41,8 +41,7 @@ class O:
         print("File saved")
 
     def get_results(self):
-        from copy import copy
-        return copy(self.f_vals), copy(self.f_best_val)
+        return self.f_vals, self.f_best_val
 
     def cec2017(self, i, x):
         if self.EVAL_LIMIT - self.ITERATION[i] <= 0:
