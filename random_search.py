@@ -18,8 +18,8 @@ def run_and_compare_to_random(fn_id, se, random_o, ff, f_o):
     # print('f best error:', bv[fn_id][-1] / (fn_id * 100))
     print('f best {0:E}'.format(bv[fn_id][-1]))
     print('f best error {0:E}'.format(bv[fn_id][-1] / (fn_id * 100)))
-    util.plot_results(fn_id, rand_v, rand_bv, v, bv,
-                      config.filename_prefix + str(fn_id) + '.svg')
+    # util.plot_results(fn_id, rand_v, rand_bv, v, bv,
+    #                   config.filename_prefix + str(fn_id) + '.svg')
 
 
 def main():
