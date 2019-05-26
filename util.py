@@ -32,7 +32,7 @@ def get_random_point_100(dim):
     return np.random.rand(dim) * 200 - 100
 
 
-def plot_results(fn_id, f_vals_rand, f_best_val_rand, f_vals, f_best_val, filename):
+def plot_results_to_compare(fn_id, f_vals_rand, f_best_val_rand, f_vals, f_best_val, filename):
     import matplotlib.pyplot as plt
     vals_rand, b_vals_rand, vals, b_vals = f_vals_rand[fn_id], f_best_val_rand[fn_id], f_vals[fn_id], f_best_val[fn_id]
 
@@ -45,6 +45,24 @@ def plot_results(fn_id, f_vals_rand, f_best_val_rand, f_vals, f_best_val, filena
     ax.plot(vals, color='b', label='f')
     ax.plot(b_vals, color='r', label='best_val')
     ax.plot(b_vals_rand, color='g', label='rand_best_val')
+    fig.savefig(filename)
+    plt.legend()
+    plt.close()
+    print("plot " + filename + ' saved')
+
+
+def plot_results(fn_id, f_vals, f_best_val, filename):
+    import matplotlib.pyplot as plt
+    vals, b_vals = f_vals[fn_id], f_best_val[fn_id]
+
+    if len(vals) == 0:
+        return
+    plt.clf()
+    fig = plt.figure()
+    plt.axis([0, len(vals), 0, (b_vals[-1]) * 4])
+    ax = fig.add_subplot(1, 1, 1)
+    ax.plot(vals, color='b', label='f')
+    ax.plot(b_vals, color='r', label='best_val')
     fig.savefig(filename)
     plt.legend()
     plt.close()
