@@ -72,7 +72,7 @@ class Subspyce:
                 return point + safe_dist - (safe_dist * (((safe_dist + 100 + point) / safe_dist) ** k))
 
         # local optimization
-        safe_dist = 1
+        safe_dist = 0.2
         while self.local_optimization_iter > 0:
             self.local_optimization_iter -= 1
             chosen_dimension = dimension[self.local_optimization_iter]
